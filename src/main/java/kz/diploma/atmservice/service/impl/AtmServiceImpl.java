@@ -1,0 +1,87 @@
+package kz.diploma.atmservice.service.impl;
+
+import jakarta.persistence.EntityNotFoundException;
+import kz.diploma.atmservice.access.adapter.AdapterAccess;
+import kz.diploma.atmservice.access.yandex.YandexAccess;
+import kz.diploma.atmservice.model.dto.ClientDTO;
+import kz.diploma.atmservice.service.AtmService;
+import kz.diploma.integration.yandex.model.FilterDataResponse;
+import kz.diploma.library.shared.model.entity.ProductEntity;
+import kz.diploma.library.shared.model.repository.AccountRepository;
+import kz.diploma.library.shared.model.repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class AtmServiceImpl implements AtmService {
+    private final YandexAccess yandexAccess;
+    private final AdapterAccess adapterAccess;
+    private final ProductRepository productRepository;
+    private final AccountRepository accountRepository;
+
+    @Override
+    public ClientDTO getClientResponseById(Integer clientId) {
+        return adapterAccess.getClientResponseById(clientId);
+    }
+
+    @Override
+    public ClientDTO getClientResponseByPan(String pan) {
+        return adapterAccess.getClientResponseByPan(pan);
+    }
+
+    @Override
+    public List<ClientDTO> getClientResponseByFio(String surname, String name, String lastName) {
+        return adapterAccess.getClientResponseByFio(surname, name, lastName);
+    }
+
+    @Override
+    public boolean checkPin(String pin, String pan) {
+        var product = getProductEntity(pan);
+        return product.pin.equals(pin);
+    }
+
+    @Override
+    public void depositCash(Long cash, String pan) {
+        var product = getProductEntity(pan);
+
+        var account = product.account;
+        account.cash += cash;
+
+        accountRepository.save(account);
+        productRepository.save(product);
+    }
+
+    @Override
+    public void withdrawCash(Long cash, String pan) {
+        var product = getProductEntity(pan);
+
+        var account = product.account;
+        account.cash -= cash;
+
+        accountRepository.save(account);
+        productRepository.save(product);
+    }
+
+    @Override
+    public String getBase64(String text, String speaker) {
+        return yandexAccess.getBase64(text, speaker.toUpperCase());
+    }
+
+    @Override
+    public FilterDataResponse getFilterData(){
+        return yandexAccess.getFilterData();
+    }
+
+    private ProductEntity getProductEntity(String pan) {
+        var product = productRepository.findByPan(pan);
+
+        if (product.isEmpty()) {
+            throw new EntityNotFoundException("Product not found");
+        }
+
+        return product.get();
+    }
+}
