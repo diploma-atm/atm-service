@@ -1,7 +1,7 @@
 spring:
   application:
     name:
-      adapter
+      atm-service
   datasource:
     driver-class-name: org.postgresql.Driver
   config:

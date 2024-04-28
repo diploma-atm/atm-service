@@ -26,12 +26,12 @@ public class AtmServiceController {
         return ResponseEntity.ok(atmService.getBase64(text, speaker));
     }
 
-    @GetMapping("/check/{id}")
+    @GetMapping("/client/{id}")
     public ClientDTO getClientResponseById(@PathVariable(name = "clientId") Integer clientId) {
         return atmService.getClientResponseById(clientId);
     }
 
-    @GetMapping("/check/pan")
+    @GetMapping("/client/pan")
     public ClientDTO getClientResponseByPan(String pan) {
         return atmService.getClientResponseByPan(pan);
     }
