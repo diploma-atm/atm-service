@@ -1,6 +1,8 @@
 package kz.diploma.atmservice.controller;
 
 import kz.diploma.atmservice.model.dto.ClientDTO;
+import kz.diploma.atmservice.model.request.DepositCashRequest;
+import kz.diploma.atmservice.model.request.WithdrawCashRequest;
 import kz.diploma.atmservice.service.AtmService;
 import kz.diploma.integration.yandex.model.FilterDataResponse;
 import lombok.RequiredArgsConstructor;
@@ -48,16 +50,16 @@ public class AtmServiceController {
 
 
     @PutMapping("/deposit")
-    public ResponseEntity<String> depositCash(@RequestBody Long cash,@RequestBody String pan) {
-        atmService.depositCash(cash, pan);
+    public ResponseEntity<String> depositCash(@RequestBody DepositCashRequest request) {
+        atmService.depositCash(request);
 
         return ResponseEntity.ok("Операция прошла успешно");
     }
 
 
     @PutMapping("/withdraw")
-    public ResponseEntity<String> withdrawCash(Long cash, String pan) {
-        atmService.withdrawCash(cash, pan);
+    public ResponseEntity<String> withdrawCash(@RequestBody WithdrawCashRequest request) {
+        atmService.withdrawCash(request);
 
         return ResponseEntity.ok("Операция прошла успешно");
     }

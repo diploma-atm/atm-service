@@ -4,8 +4,11 @@ import jakarta.persistence.EntityNotFoundException;
 import kz.diploma.atmservice.access.adapter.AdapterAccess;
 import kz.diploma.atmservice.access.yandex.YandexAccess;
 import kz.diploma.atmservice.model.dto.ClientDTO;
+import kz.diploma.atmservice.model.request.DepositCashRequest;
+import kz.diploma.atmservice.model.request.WithdrawCashRequest;
 import kz.diploma.atmservice.service.AtmService;
 import kz.diploma.integration.yandex.model.FilterDataResponse;
+import kz.diploma.library.shared.error_handling.exception.IncorrectPinException;
 import kz.diploma.library.shared.model.entity.ProductEntity;
 import kz.diploma.library.shared.model.repository.AccountRepository;
 import kz.diploma.library.shared.model.repository.ProductRepository;
@@ -44,22 +47,28 @@ public class AtmServiceImpl implements AtmService {
     }
 
     @Override
-    public void depositCash(Long cash, String pan) {
-        var product = getProductEntity(pan);
+    public void depositCash(DepositCashRequest request) {
+        var product = getProductEntity(request.getPan());
 
         var account = product.account;
-        account.cash += cash;
+        account.cash += request.cash;
 
         accountRepository.save(account);
         productRepository.save(product);
     }
 
     @Override
-    public void withdrawCash(Long cash, String pan) {
-        var product = getProductEntity(pan);
+    public void withdrawCash(WithdrawCashRequest request) {
+        var valid = checkPin(request.getPin(), request.getPan());
+
+        if(!valid){
+            throw new IncorrectPinException();
+        }
+
+        var product = getProductEntity(request.pan);
 
         var account = product.account;
-        account.cash -= cash;
+        account.cash -= request.cash;
 
         accountRepository.save(account);
         productRepository.save(product);
