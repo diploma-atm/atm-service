@@ -53,6 +53,10 @@ public class AtmServiceImpl implements AtmService {
         var account = product.account;
         account.cash += request.cash;
 
+        if(account.cash < 0){
+            throw new IncorrectPinException("Отрицательный остаток на счету");
+        }
+
         accountRepository.save(account);
         productRepository.save(product);
     }
@@ -62,13 +66,19 @@ public class AtmServiceImpl implements AtmService {
         var valid = checkPin(request.getPin(), request.getPan());
 
         if(!valid){
-            throw new IncorrectPinException();
+            throw new IncorrectPinException("Неправильный пин-код для этой карты");
         }
 
         var product = getProductEntity(request.pan);
 
         var account = product.account;
+
+
         account.cash -= request.cash;
+
+        if(account.cash < 0){
+            throw new IncorrectPinException("Отрицательный остаток на счету");
+        }
 
         accountRepository.save(account);
         productRepository.save(product);
