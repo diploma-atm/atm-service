@@ -44,3 +44,6 @@ services:
       - config
       - discovery
       - db
+    environment:
+      - CONFIG_SERVER=http://config:8888/
+      - EUREKA_INSTANCE_IP-ADDRESS=host.docker.internal
