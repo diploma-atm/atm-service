@@ -9,6 +9,7 @@ import kz.diploma.atmservice.model.request.WithdrawCashRequest;
 import kz.diploma.atmservice.service.AtmService;
 import kz.diploma.integration.yandex.model.FilterDataResponse;
 import kz.diploma.library.shared.error_handling.exception.IncorrectPinException;
+import kz.diploma.library.shared.error_handling.exception.NegativeBalanceException;
 import kz.diploma.library.shared.model.entity.ProductEntity;
 import kz.diploma.library.shared.model.repository.AccountRepository;
 import kz.diploma.library.shared.model.repository.ProductRepository;
@@ -54,7 +55,7 @@ public class AtmServiceImpl implements AtmService {
         account.cash += request.cash;
 
         if(account.cash < 0){
-            throw new IncorrectPinException("Отрицательный остаток на счету");
+            throw new NegativeBalanceException("Negative balance on account");
         }
 
         accountRepository.save(account);
@@ -66,18 +67,16 @@ public class AtmServiceImpl implements AtmService {
         var valid = checkPin(request.getPin(), request.getPan());
 
         if(!valid){
-            throw new IncorrectPinException("Неправильный пин-код для этой карты");
+            throw new IncorrectPinException("Incorrect pin-code");
         }
 
         var product = getProductEntity(request.pan);
 
         var account = product.account;
-
-
         account.cash -= request.cash;
 
         if(account.cash < 0){
-            throw new IncorrectPinException("Отрицательный остаток на счету");
+            throw new NegativeBalanceException("Negative balance on account");
         }
 
         accountRepository.save(account);
