@@ -1,6 +1,5 @@
 package kz.diploma.atmservice.controller;
 
-import kz.diploma.atmservice.access.adapter.impl.AdapterAccessImpl;
 import kz.diploma.atmservice.model.dto.ClientDTO;
 import kz.diploma.atmservice.service.AtmService;
 import kz.diploma.integration.yandex.model.FilterDataResponse;
@@ -27,7 +26,7 @@ public class AtmServiceController {
     }
 
     @GetMapping("/client/{id}")
-    public ClientDTO getClientResponseById(@PathVariable(name = "clientId") Integer clientId) {
+    public ClientDTO getClientResponseById(@PathVariable(name = "id") Integer clientId) {
         return atmService.getClientResponseById(clientId);
     }
 
