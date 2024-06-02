@@ -5,6 +5,8 @@ import kz.diploma.atmservice.model.request.DepositCashRequest;
 import kz.diploma.atmservice.model.request.WithdrawCashRequest;
 import kz.diploma.atmservice.service.AtmService;
 import kz.diploma.integration.yandex.model.FilterDataResponse;
+import kz.diploma.shared.library.security.annotation.RolesAllowed;
+import kz.diploma.shared.library.security.model.Roles;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/atm-service")
 @RequiredArgsConstructor
+@RolesAllowed(value = Roles.CLIENT)
 public class AtmServiceController {
     private final AtmService atmService;
 
