@@ -5,7 +5,7 @@ import kz.diploma.auth.access.AuthAccessAutoConfiguration;
 import kz.diploma.integration.yandex.IntegrationYandexAutoConfiguration;
 import kz.diploma.library.shared.error_handling.ErrorHandlingAutoConfiguration;
 import kz.diploma.library.shared.model.ModelsAutoConfiguration;
-import kz.diploma.shared.library.security.SecurityInterceptorConfiguration;
+import kz.diploma.shared.library.security.CorsFilterConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Import;
         AuthAccessAutoConfiguration.class,
         ModelsAutoConfiguration.class,
         ErrorHandlingAutoConfiguration.class,
-        SecurityInterceptorConfiguration.class
+        CorsFilterConfiguration.class,
 })
-public class SecurityConfiguration {
+public class DefaultConfiguration {
 }

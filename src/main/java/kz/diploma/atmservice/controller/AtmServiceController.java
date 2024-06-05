@@ -3,8 +3,12 @@ package kz.diploma.atmservice.controller;
 import kz.diploma.atmservice.model.dto.ClientDTO;
 import kz.diploma.atmservice.model.request.DepositCashRequest;
 import kz.diploma.atmservice.model.request.WithdrawCashRequest;
+import kz.diploma.atmservice.model.request.YandexRequest;
+import kz.diploma.atmservice.model.response.YandexResponse;
 import kz.diploma.atmservice.service.AtmService;
 import kz.diploma.integration.yandex.model.FilterDataResponse;
+
+import kz.diploma.shared.library.security.annotation.PublicAccess;
 import kz.diploma.shared.library.security.annotation.RolesAllowed;
 import kz.diploma.shared.library.security.model.Roles;
 import lombok.RequiredArgsConstructor;
@@ -20,14 +24,16 @@ import java.util.List;
 public class AtmServiceController {
     private final AtmService atmService;
 
+    @PublicAccess
     @GetMapping("/yandex/filter-data")
     public ResponseEntity<FilterDataResponse> getFilterData() {
         return ResponseEntity.ok(atmService.getFilterData());
     }
 
-    @GetMapping("/yandex/speech")
-    public ResponseEntity<String> getSpeechData(String text, String speaker) {
-        return ResponseEntity.ok(atmService.getBase64(text, speaker));
+    @PublicAccess
+    @PostMapping("/yandex/speech")
+    public ResponseEntity<YandexResponse> getSpeechData(@RequestBody YandexRequest request) {
+        return ResponseEntity.ok(new YandexResponse(atmService.getBase64(request)));
     }
 
     @GetMapping("/client/{id}")
@@ -44,13 +50,6 @@ public class AtmServiceController {
     public List<ClientDTO> getClientResponseByFio(String surname, String name, String lastName) {
         return atmService.getClientResponseByFio(surname, name, lastName);
     }
-
-
-    @GetMapping("/check/pin")
-    public ResponseEntity<Boolean> checkPin(String pin, String pan) {
-        return ResponseEntity.ok(atmService.checkPin(pin, pan));
-    }
-
 
     @PutMapping("/deposit")
     public ResponseEntity<String> depositCash(@RequestBody DepositCashRequest request) {

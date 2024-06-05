@@ -6,9 +6,9 @@ import kz.diploma.atmservice.access.yandex.YandexAccess;
 import kz.diploma.atmservice.model.dto.ClientDTO;
 import kz.diploma.atmservice.model.request.DepositCashRequest;
 import kz.diploma.atmservice.model.request.WithdrawCashRequest;
+import kz.diploma.atmservice.model.request.YandexRequest;
 import kz.diploma.atmservice.service.AtmService;
 import kz.diploma.integration.yandex.model.FilterDataResponse;
-import kz.diploma.library.shared.error_handling.exception.IncorrectPinException;
 import kz.diploma.library.shared.error_handling.exception.NegativeBalanceException;
 import kz.diploma.library.shared.model.entity.ProductEntity;
 import kz.diploma.library.shared.model.repository.AccountRepository;
@@ -42,12 +42,6 @@ public class AtmServiceImpl implements AtmService {
     }
 
     @Override
-    public boolean checkPin(String pin, String pan) {
-        var product = getProductEntity(pan);
-        return product.pin.equals(pin);
-    }
-
-    @Override
     public void depositCash(DepositCashRequest request) {
         var product = getProductEntity(request.getPan());
 
@@ -64,12 +58,6 @@ public class AtmServiceImpl implements AtmService {
 
     @Override
     public void withdrawCash(WithdrawCashRequest request) {
-        var valid = checkPin(request.getPin(), request.getPan());
-
-        if(!valid){
-            throw new IncorrectPinException("Incorrect pin-code");
-        }
-
         var product = getProductEntity(request.pan);
 
         var account = product.account;
@@ -84,8 +72,8 @@ public class AtmServiceImpl implements AtmService {
     }
 
     @Override
-    public String getBase64(String text, String speaker) {
-        return yandexAccess.getBase64(text, speaker.toUpperCase());
+    public String getBase64(YandexRequest request) {
+        return yandexAccess.getBase64(request.text, request.speaker.toUpperCase());
     }
 
     @Override
