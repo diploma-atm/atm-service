@@ -4,6 +4,7 @@ import kz.diploma.atmservice.model.dto.ClientDTO;
 import kz.diploma.atmservice.model.request.DepositCashRequest;
 import kz.diploma.atmservice.model.request.WithdrawCashRequest;
 import kz.diploma.atmservice.model.request.YandexRequest;
+import kz.diploma.atmservice.model.response.CashResponse;
 import kz.diploma.atmservice.model.response.YandexResponse;
 import kz.diploma.atmservice.service.AtmService;
 import kz.diploma.integration.yandex.model.FilterDataResponse;
@@ -52,17 +53,17 @@ public class AtmServiceController {
     }
 
     @PutMapping("/deposit")
-    public ResponseEntity<String> depositCash(@RequestBody DepositCashRequest request) {
+    public ResponseEntity<CashResponse> depositCash(@RequestBody DepositCashRequest request) {
         atmService.depositCash(request);
 
-        return ResponseEntity.ok("Операция прошла успешно");
+        return ResponseEntity.ok(new CashResponse("Операция прошла успешно"));
     }
 
 
     @PutMapping("/withdraw")
-    public ResponseEntity<String> withdrawCash(@RequestBody WithdrawCashRequest request) {
+    public ResponseEntity<CashResponse> withdrawCash(@RequestBody WithdrawCashRequest request) {
         atmService.withdrawCash(request);
 
-        return ResponseEntity.ok("Операция прошла успешно");
+        return ResponseEntity.ok(new CashResponse("Операция прошла успешно"));
     }
 }

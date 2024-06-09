@@ -1,7 +1,6 @@
 package kz.diploma.atmservice.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import kz.diploma.adapter.access.model.ClientResponse;
+import kz.diploma.adapter.access.model.ClientClientResponse;
 import lombok.Data;
 
 @Data
@@ -13,7 +12,7 @@ public class ClientDTO {
     public String phoneNumber;
     public Boolean isBlocked;
 
-    public ClientDTO(ClientResponse clientResponse) {
+    public ClientDTO(ClientClientResponse clientResponse) {
         this.id = clientResponse.getId();
         this.surname = clientResponse.getSurname();
         this.name = clientResponse.getName();
